@@ -1,0 +1,90 @@
+.container{
+    display: flex;
+    justify-content: center;
+    background-color: rgb(12, 0, 59);
+    align-items: center;
+    /*flex-direction: column;*/
+}
+div{
+    border: 20px solid transparent; 
+    border-image: linear-gradient(to bottom, #3acfd5 0%, #3a4ed5 100%) 1;
+}
+
+img{
+    height: 100px;
+    position:fixed;
+}
+
+.texto-degradado {
+    background: -webkit-linear-gradient(yellow,red);
+    background-clip: inherit;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: tomato;  
+  }
+
+.sombreado {
+    position:fixed;
+    margin: 20px;
+    margin-top: 70vh;
+    background-color: rgb(12, 0, 59);
+}
+h1{
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 120px;
+    margin-top: 5vh;
+    margin-right: 50vh;
+    margin-left: 30vh;
+}
+h3{
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 40px;
+    margin-right: 50vh;
+    margin-left: 30vh;
+
+}
+ul{
+    padding: 0;
+}
+li{
+    padding:0;
+    padding-top: 9vh;
+}
+
+a {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
+
+a:link {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
+
+a:visited {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
+
+a:focus {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    outline:auto;
+    text-decoration:solid;
+    color: white;
+}
+
+a:active {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
