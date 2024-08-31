@@ -1,0 +1,145 @@
+.container{
+    display: flex;
+   /* justify-content: center;
+    align-items: center;*/
+    
+    margin:0;
+    flex-direction: column;
+}
+.titulo{
+    font-size:90px; 
+    margin-left:10%;
+    font-family: 'Courier New', Courier, monospace;
+    margin-top: 5vh;
+    margin-right: 50vh;
+    letter-spacing: 0.25em;
+    word-spacing: 0.25em;
+    font-style: oblique ;
+}
+.subtitulo{
+    font-size:60px; 
+    margin-left:10%;
+    font-family: 'Courier New', Courier, monospace;
+    margin-top: 5vh;
+    margin-right: 50vh;
+    letter-spacing: 0.25em;
+    word-spacing: 0.25em;
+    width: 70%;
+    line-height: 1.5;
+}
+.parrafo{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 30px;
+    margin-top: 5vh;
+    margin-right: 50vh;
+    margin-left:10%;    /*letter-spacing: 0.25em;*/
+    word-spacing: 0.25em;
+    width: 70%;
+    line-height: 2;
+}
+
+@media screen and (max-width: 700px) {
+    .titulo{
+        font-size:45px;
+    }
+
+    .subtitulo{
+        font-size:40px;
+    }
+    
+    .parrafo{
+        font-size:20px;
+    }
+}
+
+.foto-de-fondo{
+    background-repeat: no-repeat;
+    background-size:cover ;
+    padding-bottom: 50vb;
+    background-attachment:fixed ;
+    background-position: center center;
+    
+}
+.align-corners{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.texto-degradado {
+    background: -webkit-linear-gradient(yellow,red);
+    background-clip: inherit;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: tomato;  
+  }
+
+.sombreado {
+    position:fixed;
+    margin: 20px;
+    margin-top: 70vh;
+    background-color: rgb(12, 0, 59);
+}
+h2{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 30px;
+    margin-top: 5vh;
+    margin-right: 50vh;
+    margin-left: 30vh;
+    /*letter-spacing: 0.25em;*/
+    word-spacing: 0.25em;
+}
+h1{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 80px;
+    margin-top: 5vh;
+    margin-right: 50vh;
+    margin-left: 30vh;
+    letter-spacing: 0.25em;
+  word-spacing: 0.25em;
+}
+h3{
+
+}
+ul{
+
+}
+li{
+    padding-bottom: 10px;;
+}
+
+a {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
+
+a:link {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
+
+a:visited {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
+
+a:focus {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    outline:auto;
+    text-decoration:solid;
+    color: white;
+}
+
+a:active {
+    outline: none;
+    text-decoration: none;
+    color: white;
+}
