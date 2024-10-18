@@ -37,8 +37,10 @@ const Camera = function (player, mundo, x, y, cameraProperties, graphicAssets) {
     this.drawPlayer = function () {
         let player_on_position = this.worldCoordenateToCameraPosition(this.player.pos.x, this.player.pos.y)
 
-        fill(0)
-        rect(player_on_position.x, player_on_position.y, this.scale * 0.8, this.scale * 0.8)
+        let img = this.assets.files.find((value) => value.es("Face"))
+        image(img.img,player_on_position.x, player_on_position.y-2,this.assets.res,this.assets.res)
+        //fill(0)
+        //rect(player_on_position.x, player_on_position.y, this.scale * 0.8, this.scale * 0.8)
     }
 
     this.drawSelected = function () {

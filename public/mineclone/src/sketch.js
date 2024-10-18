@@ -23,6 +23,7 @@ function setup() {
         {img:loadImage("assets/Bush.png"),es:(nombre) => nombre==="Bush"},
         {img:loadImage("assets/Grass.png"),es:(nombre) => nombre==="Grass"},
         {img:loadImage("assets/Earth.png"),es:(nombre) => nombre==="Earth"},
+        {img:loadImage("assets/Face.png"),es:(nombre) => nombre==="Face"},
         {img:loadImage("assets/Undefined.png"),es:()=>true}
     ],res:16}
     
