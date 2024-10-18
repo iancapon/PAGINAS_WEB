@@ -1,83 +1,111 @@
-class Camera {
-    constructor(player, mundo, x, y) {
-        this.player = player
-        this.mundo = mundo
-        this.camera = {
-            x: x,
-            y: y
-        }
-        this.desf = {
-            x: 0,
-            y: 0
-        }
-    }
-    render = function (wid, hei, scale) {
-        wid = wid + 2 //HORRIBLE PERO YA FUE
-        hei = hei + 2
-        let dx = -scale
-        let dy = -scale
-        noStroke()
-        for (let i = int(this.camera.x) - wid / 2; i < int(this.camera.x) + wid / 2; i++) {
-            for (let j = int(this.camera.y) - hei / 2; j < int(this.camera.y) + hei / 2; j++) {
-                let x = map(i, int(this.camera.x) - wid / 2, int(this.camera.x) + wid / 2, 0, wid * scale)
-                let y = map(j, int(this.camera.y) - hei / 2, int(this.camera.y) + hei / 2, 0, hei * scale)
+const Camera = function (player, mundo, x, y, cameraProperties) {
 
+    this.player = player
+    this.mundo = mundo
+    this.position = {
+        x: x,
+        y: y
+    }
+    this.pixelShift = {
+        x: 0,
+        y: 0
+    }
+
+    this.wid = cameraProperties.wid
+    this.hei = cameraProperties.hei
+    this.scale = cameraProperties.scale
+
+    this.barrasNegras = function (new_wid, new_hei) {
+        fill(110)
+        rect(0, (new_hei - 2) * this.scale, (new_wid - 1) * this.scale + 1, this.scale + 1)
+        rect((new_wid - 2) * this.scale, 0, this.scale + 1, (new_hei - 1) * this.scale + 1)
+    }
+    this.render = function () {
+        let new_wid = this.wid + 2 //HORRIBLE PERO YA FUE
+        let new_hei = this.hei + 2
+        let dx = -this.scale
+        let dy = -this.scale
+        noStroke()
+        for (let i = int(this.position.x) - new_wid / 2; i < int(this.position.x) + new_wid / 2; i++) {
+            for (let j = int(this.position.y) - new_hei / 2; j < int(this.position.y) + new_hei / 2; j++) {
+                let bp = this.worldCoordenateToCameraPosition(i, j, new_wid, new_hei)
                 let block = this.mundo.getBlockAt(i, j)
                 fill(block.r, block.g, block.b, 255)
-                rect(x + this.desf.x * scale + dx, y + this.desf.y * scale + dy, scale, scale + 1)
+                rect(bp.x + this.pixelShift.x * this.scale + dx, bp.y + this.pixelShift.y * this.scale + dy, this.scale + 1, this.scale + 1)
             }
         }
-
-        fill(110)
-        rect(0, (hei - 2) * scale, (wid - 1) * scale, scale)
-        rect((wid - 2) * scale, 0, scale, (hei - 1) * scale)
+        //this.barrasNegras(new_wid, new_hei)
     }
-    record = function (wid, hei, scale) {
-        this.render(wid, hei, scale)
 
-        let player_on_camera = this.worldCoordenateToCameraPosition(this.player.pos.x, this.player.pos.y, wid, hei, scale)
+    this.drawPlayer = function () {
+        let player_on_position = this.worldCoordenateToCameraPosition(this.player.pos.x, this.player.pos.y)
 
         fill(0)
-        rect(player_on_camera.x + 3, player_on_camera.y - 3, scale * 0.7, scale)
+        rect(player_on_position.x, player_on_position.y, this.scale * 0.8, this.scale * 0.8)
+    }
 
+    this.drawSelected = function () {
         let block_selected = this.player.checkAdjacentBlocks(this.player.aim, this.player.pos.x, this.player.pos.y)
-        let block_selected_coord = this.worldCoordenateToCameraPosition(block_selected.x, block_selected.y, wid, hei, scale)
+
+        let block_selected_coord = this.worldCoordenateToCameraPosition(block_selected.x, block_selected.y)
 
         noFill()
         stroke(200, 0, 0)
-        rect(block_selected_coord.x, block_selected_coord.y, scale)
+        rect(block_selected_coord.x, block_selected_coord.y, this.scale)
         noStroke()
+    }
 
+    this.drawInventory = function () {
         textSize(35)
         fill(255)
-        text("Inventory.." , (wid+1) * scale, 1.5 * 40)
-        textSize(30)
-        this.player.inventory.forEach((value,index) => {
+        text("Inventory..", (this.wid + 1) * this.scale, 1.5 * 40)
+        textSize(15)
+        this.player.inventory.forEach((value, index) => {
             fill(200)
-            if(index==this.player.inv_index){
+            if (index == this.player.inv_index) {
                 fill(255)
             }
-            text(String(index+1) +". "+value , (wid+1) * scale, (index+3) * 40)
+            text(String(index + 1) + ". " + value, (this.wid * 6 / 7 + 1) * this.scale, (index + 3) * 20)
         })
+    }
 
+    this.record = function () {
+        this.render()
+
+        this.drawPlayer()
+
+        this.drawSelected()
+
+        this.drawInventory()
+    }
+
+    this.worldCoordenateToCameraPosition = function (x, y, wid, hei, scale) {
+        let new_wid = (wid == undefined) ? this.wid : wid
+        let new_hei = (hei == undefined) ? this.hei : hei
+        let new_scale = (scale == undefined) ? this.scale : scale
+        try {
+            let cx = map(x, (this.position.x) - new_wid / 2, (this.position.x) + new_wid / 2, 0, new_wid * new_scale)
+            let cy = map(y, (this.position.y) - new_hei / 2, (this.position.y) + new_hei / 2, 0, new_hei * new_scale)
+            return { x: cx, y: cy }
+        }
+        catch {
+            return { x: null, y: null }
+        }
 
 
     }
 
-
-    worldCoordenateToCameraPosition = function (x, y, wid, hei, scale) {
-        let cx = map(x, (this.camera.x) - wid / 2, (this.camera.x) + wid / 2, 0, wid * scale)
-        let cy = map(y, (this.camera.y) - hei / 2, (this.camera.y) + hei / 2, 0, hei * scale)
-        return { x: cx, y: cy }
+    this.movePositionByAmount = function (x, y) {
+        this.position.x += x
+        this.pixelShift.x = abs(this.position.x - int(this.position.x)) * x
+        this.position.y += y
+        this.pixelShift.y = abs(this.position.y - int(this.position.y)) * y
     }
 
-    moveXposition = function (amount) {
-        this.camera.x += (amount)
-        this.desf.x = -abs(this.camera.x - int(this.camera.x))
-    }
-
-    moveYposition = function (amount) {
-        this.camera.y += amount
-        this.desf.y = -abs(this.camera.y - int(this.camera.y))
+    this.setPosition = function (x, y) {
+        this.position.x = x
+        this.position.y = y
+        this.pixelShift.x = -abs(this.position.x - int(this.position.x))
+        this.pixelShift.y = -abs(this.position.y - int(this.position.y))
     }
 }

@@ -1,25 +1,38 @@
 const game_speed = 1.0
+const cameraProperties = {
+    wid: 60,
+    hei: 34,
+    scale: 16
+}
 
-let miMundo=undefined
-let jugador=undefined
+const calculateCameraProperties = function (horizontal, vertical, blocksize) {
+    return {
+        wid: int((horizontal - horizontal % blocksize) / blocksize),
+        hei: int((vertical - vertical % blocksize) / blocksize),
+        scale: blocksize
+    }
+}
+
+let miMundo = undefined
+let jugador = undefined
 let delta_time = 0
 
 function setup() {
-    createCanvas(1600, 900)
+    createCanvas(1920, 1080)
+    frameRate(60)
     for (let element of document.getElementsByClassName("p5Canvas")) {
         element.addEventListener("contextmenu", (e) => e.preventDefault());
     }
-    miMundo = new Mundo()
-    jugador = new Player(miMundo, 30)
+    miMundo = new Mundo(256,128,1)
+    jugador = new Player(miMundo, 128, cameraProperties)
     miMundo.generateWorld()
     jugador.setSpawn()
 }
 
-
-
 function draw() {
     background(110)
-    jugador.rec(60,40,20)
+    scale(2)
+    jugador.rec()
 
     delta_time = millis() - delta_time
     for (let i = 0; i < delta_time; i++) {
@@ -30,23 +43,8 @@ function draw() {
 
     handleKeyPress()
     handleMousePress()
-   // console.log(jugador.tick)
-   textSize(20)
-   fill(200)
-   text("W-A-D to move..",60, 20*40)
-   text("Numbers to select from inventory..",60, 20*41)
-   text("Right-click to add block..",60, 20*42)
-   text("Left-click to remove block..",60, 20*43) 
-   text("Wheel to aim..",60, 20*44)
-    
-}
 
-
-function addWood(block){
-    block.Wood()
-}
-function addStone(block){
-    block.Stone()
+    //comentarios()
 }
 
 function mouseWheel(event) {
@@ -60,7 +58,7 @@ function mouseWheel(event) {
 function handleKeyPress() {
     if (keyIsPressed) {
         if (key == "w" || key == "W") {
-            jugador.desplazarJugadorEnY(-0.2)
+            jugador.desplazarJugadorEnY(-0.22)
         }
         if (key == "a" || key == "A") {
             jugador.desplazarJugadorEnX(-0.2)
@@ -75,8 +73,8 @@ function handleKeyPress() {
         if (key == "m" || key == "M") {
             miMundo.getMap()
         }
-        "1234567890".split("").find((value,index)=>{
-            if(value==key)
+        "1234567890".split("").find((value, index) => {
+            if (value == key)
                 jugador.useFromInventory(index)
         })
     } else {
@@ -90,5 +88,14 @@ function handleMousePress() {
     }
 }
 
+function comentarios() {
+    textSize(20)
+    fill(200)
+    text("W-A-D to move..", 60, 20 * 40)
+    text("Numbers to select from inventory..", 60, 20 * 41)
+    text("Right-click to add block..", 60, 20 * 42)
+    text("Left-click to remove block..", 60, 20 * 43)
+    text("Wheel to aim..", 60, 20 * 44)
+}
 
 
