@@ -5,14 +5,6 @@ const cameraProperties = {
     scale: 16
 }
 
-const calculateCameraProperties = function (horizontal, vertical, blocksize) {
-    return {
-        wid: int((horizontal - horizontal % blocksize) / blocksize),
-        hei: int((vertical - vertical % blocksize) / blocksize),
-        scale: blocksize
-    }
-}
-
 let miMundo = undefined
 let jugador = undefined
 let delta_time = 0
@@ -23,8 +15,19 @@ function setup() {
     for (let element of document.getElementsByClassName("p5Canvas")) {
         element.addEventListener("contextmenu", (e) => e.preventDefault());
     }
-    miMundo = new Mundo(256,128,1)
-    jugador = new Player(miMundo, 128, cameraProperties)
+    const assets={files:[
+        {img:loadImage("assets/Void.png"),es:(nombre) => nombre==="Void"},
+        {img:loadImage("assets/Wood.png"),es:(nombre) => nombre==="Wood"},
+        {img:loadImage("assets/Stone.png"),es:(nombre) => nombre==="Stone"},
+        {img:loadImage("assets/Leaves.png"),es:(nombre) => nombre==="Leaves"},
+        {img:loadImage("assets/Bush.png"),es:(nombre) => nombre==="Bush"},
+        {img:loadImage("assets/Grass.png"),es:(nombre) => nombre==="Grass"},
+        {img:loadImage("assets/Earth.png"),es:(nombre) => nombre==="Earth"},
+        {img:loadImage("assets/Undefined.png"),es:()=>true}
+    ],res:16}
+    
+    miMundo = new Mundo(256, 128, 1)
+    jugador = new Player(miMundo, 128, cameraProperties, assets)
     miMundo.generateWorld()
     jugador.setSpawn()
 }
@@ -43,8 +46,6 @@ function draw() {
 
     handleKeyPress()
     handleMousePress()
-
-    //comentarios()
 }
 
 function mouseWheel(event) {
@@ -55,21 +56,21 @@ function mouseWheel(event) {
             jugador.aimWithScroll(-1)
     }
 }
+
 function handleKeyPress() {
     if (keyIsPressed) {
         if (key == "w" || key == "W") {
             jugador.desplazarJugadorEnY(-0.22)
         }
-        if (key == "a" || key == "A") {
-            jugador.desplazarJugadorEnX(-0.2)
-        }
         if (key == "s" || key == "S") {
             jugador.desplazarJugadorEnY(0.2)
+        }
+        if (key == "a" || key == "A") {
+            jugador.desplazarJugadorEnX(-0.2)
         }
         if (key == "d" || key == "D") {
             jugador.desplazarJugadorEnX(0.2)
         }
-
         if (key == "m" || key == "M") {
             miMundo.getMap()
         }
@@ -78,24 +79,13 @@ function handleKeyPress() {
                 jugador.useFromInventory(index)
         })
     } else {
-        jugador.notPressed()
+        jugador.desplazarJugadorEnX(0)
     }
 }
+
 function handleMousePress() {
     if (mouseIsPressed) {
         if (mouseButton === LEFT) jugador.removeBlock()
         if (mouseButton === RIGHT) jugador.addBlock()
     }
 }
-
-function comentarios() {
-    textSize(20)
-    fill(200)
-    text("W-A-D to move..", 60, 20 * 40)
-    text("Numbers to select from inventory..", 60, 20 * 41)
-    text("Right-click to add block..", 60, 20 * 42)
-    text("Left-click to remove block..", 60, 20 * 43)
-    text("Wheel to aim..", 60, 20 * 44)
-}
-
-

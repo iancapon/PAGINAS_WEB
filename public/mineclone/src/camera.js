@@ -1,4 +1,4 @@
-const Camera = function (player, mundo, x, y, cameraProperties) {
+const Camera = function (player, mundo, x, y, cameraProperties, graphicAssets) {
 
     this.player = player
     this.mundo = mundo
@@ -15,12 +15,9 @@ const Camera = function (player, mundo, x, y, cameraProperties) {
     this.hei = cameraProperties.hei
     this.scale = cameraProperties.scale
 
-    this.barrasNegras = function (new_wid, new_hei) {
-        fill(110)
-        rect(0, (new_hei - 2) * this.scale, (new_wid - 1) * this.scale + 1, this.scale + 1)
-        rect((new_wid - 2) * this.scale, 0, this.scale + 1, (new_hei - 1) * this.scale + 1)
-    }
-    this.render = function () {
+    this.assets = graphicAssets
+
+    this.renderImagesForCubes = function () {
         let new_wid = this.wid + 2 //HORRIBLE PERO YA FUE
         let new_hei = this.hei + 2
         let dx = -this.scale
@@ -30,11 +27,11 @@ const Camera = function (player, mundo, x, y, cameraProperties) {
             for (let j = int(this.position.y) - new_hei / 2; j < int(this.position.y) + new_hei / 2; j++) {
                 let bp = this.worldCoordenateToCameraPosition(i, j, new_wid, new_hei)
                 let block = this.mundo.getBlockAt(i, j)
-                fill(block.r, block.g, block.b, 255)
-                rect(bp.x + this.pixelShift.x * this.scale + dx, bp.y + this.pixelShift.y * this.scale + dy, this.scale + 1, this.scale + 1)
+
+                let img = this.assets.files.find((value) => value.es(block.name))
+                image(img.img, bp.x + this.pixelShift.x * this.scale + dx, bp.y + this.pixelShift.y * this.scale + dy, this.assets.res, this.assets.res)
             }
         }
-        //this.barrasNegras(new_wid, new_hei)
     }
 
     this.drawPlayer = function () {
@@ -70,12 +67,9 @@ const Camera = function (player, mundo, x, y, cameraProperties) {
     }
 
     this.record = function () {
-        this.render()
-
+        this.renderImagesForCubes()
         this.drawPlayer()
-
         this.drawSelected()
-
         this.drawInventory()
     }
 
@@ -91,8 +85,6 @@ const Camera = function (player, mundo, x, y, cameraProperties) {
         catch {
             return { x: null, y: null }
         }
-
-
     }
 
     this.movePositionByAmount = function (x, y) {

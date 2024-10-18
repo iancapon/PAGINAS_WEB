@@ -1,13 +1,13 @@
 
 
-const Player = function (mundo, x, cameraProperties) {
+const Player = function (mundo, x, cameraProperties, gameAssets) {
     Entidad.call(this,mundo,x,0)
 
     this.inventory = ["Stone", "Wood", "Grass", "Leaves", "Earth", "Bush"]
     this.inv_index = 0
     this.aim = 3
 
-    this.cam = new Camera(this, this.mundo, 0, 0, cameraProperties)
+    this.cam = new Camera(this, this.mundo, 0, 0, cameraProperties, gameAssets)
 
     this.tick = 0
     this.remove_TickCounter = this.tick
