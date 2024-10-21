@@ -8,6 +8,9 @@ const cameraProperties = {
 let miMundo = undefined
 let jugador = undefined
 let delta_time = 0
+let background_day = undefined
+let background_noon = undefined
+let background_night = undefined
 
 function setup() {
     createCanvas(1920, 1080)
@@ -15,7 +18,9 @@ function setup() {
     for (let element of document.getElementsByClassName("p5Canvas")) {
         element.addEventListener("contextmenu", (e) => e.preventDefault());
     }
-
+    background_day = loadImage("assets/sky.png")
+    background_noon = loadImage("assets/sky_noon.png")
+    background_night = loadImage("assets/sky_night.png")
     miMundo = new Mundo(128, 128, 2, Math.random() * 10000)
     jugador = new Player(miMundo, 128, cameraProperties, assets())
     miMundo.generateWorld()
@@ -23,13 +28,22 @@ function setup() {
 }
 
 function draw() {
-    background(110)
+    image(background_night, 0, 0, 1920, 1080)
+    const day_dur = 120
+    let time_of_day = (jugador.tick % (day_dur * 1000)) / 1000
+    if (time_of_day < 60) {
+        image(background_day, 0, 0, 1920, 1080)
+    }
+    if (time_of_day < 10 || (time_of_day > 60 && time_of_day < 70)) {
+        image(background_noon, 0, 0, 1920, 1080)
+    }
     scale(2)
     aimWithMouse(jugador.rec())
 
     delta_time = millis() - delta_time
     for (let i = 0; i < delta_time; i++) {
         jugador.physics(delta_time, game_speed)
+        miMundo.entityBehaviour(delta_time, game_speed, jugador)
     }
     jugador.advanceTime(delta_time)
     delta_time = millis()
@@ -60,7 +74,7 @@ function mouseWheel(event) {
             //jugador.aimWithScroll(1)
             jugador.scrollInventory(1)
         }
-        else{
+        else {
             //jugador.aimWithScroll(-1)
             jugador.scrollInventory(-1)
         }
@@ -70,7 +84,7 @@ function mouseWheel(event) {
 function handleKeyPress() {
     if (keyIsPressed) {
         if (key == "w" || key == "W") {
-            jugador.desplazarJugadorEnY(-0.22)
+            jugador.desplazarJugadorEnY(-0.15)
         }
         if (key == "s" || key == "S") {
             jugador.desplazarJugadorEnY(0.2)
@@ -84,10 +98,10 @@ function handleKeyPress() {
         if (key == "m" || key == "M") {
             miMundo.getMap()
         }
-        "1234567890".split("").find((value, index) => {
+        /*"1234567890".split("").find((value, index) => {
             if (value == key)
                 jugador.useFromInventory(index)
-        })
+        })*/
     } else {
         jugador.desplazarJugadorEnX(0)
     }

@@ -11,6 +11,7 @@ const blockList = function () {
         new Earth(),
         new Bush(),
         new BlueberryBush(),
+        new Bindweed(),
         new Block()
     ]
     this.listaDeBloques = function(){

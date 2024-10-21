@@ -51,16 +51,15 @@ const Camera = function (player, mundo, x, y, cameraProperties, graphicAssets) {
     }
 
     this.drawInventory = function () {
-        textSize(35)
-        fill(255)
-        text("Inventory..", (this.wid + 1) * this.scale, 1.5 * 40)
-        textSize(15)
-        this.player.inventory.forEach((value, index) => {
-            fill(200)
-            if (index == this.player.inv_index) {
-                fill(255)
-            }
-            text(String(index + 1) + ". " + value, (this.wid * 6 / 7 + 1) * this.scale, (index + 3) * 20)
+        this.player.inventory.drawInventory(800,10)
+    }
+    this.drawEntities = function () {
+        this.mundo.entities.forEach(entity => {
+            let ep = this.worldCoordenateToCameraPosition(entity.pos.x, entity.pos.y)
+            //fill(0, 0, 255)
+            //circle(ep.x + 0.5 * this.scale, ep.y + 0.5 * this.scale, 10)
+            image(this.assets.files.find((value) => value.es(entity.type.name)).img, ep.x, ep.y, this.scale / 2, this.scale / 2)
+            //console.log("x: " + entity.pos.x + " y: " + entity.pos.y)
         })
     }
 
@@ -68,7 +67,7 @@ const Camera = function (player, mundo, x, y, cameraProperties, graphicAssets) {
         this.renderImagesForCubes()
         this.drawSelected()
         this.drawInventory()
-
+        this.drawEntities()
         return this.drawPlayer()
     }
 

@@ -8,32 +8,6 @@ const Chunk = function (wid, hei, topx, topy, seed) {
         y: topy
     }
 
-    this.new_verticalLayer = function (type, level, x) {
-        for (let y = level; y < this.hei; y++) {
-            this.blocks[x + y * this.wid] = new type(x + this.position.x, y + this.position.y)
-        }
-    }
-
-    this.new_tree = function (treePops, treeThreshold, grassLevel, x, logType, leaveType) {
-        if (treePops > treeThreshold && x > 0 && x < this.wid - 1) {
-            this.blocks[x + (grassLevel - 1) * this.wid] = new logType(x + this.position.x, (grassLevel - 1) + this.position.y)
-            this.blocks[x + (grassLevel - 2) * this.wid] = new logType(x + this.position.x, (grassLevel - 2) + this.position.y)
-            this.blocks[x + (grassLevel - 3) * this.wid] = new logType(x + this.position.x, (grassLevel - 3) + this.position.y)
-            this.blocks[x + (grassLevel - 4) * this.wid] = new logType(x + this.position.x, (grassLevel - 4) + this.position.y)
-            this.blocks[x + (grassLevel - 5) * this.wid] = new leaveType(x + this.position.x, (grassLevel - 5) + this.position.y)
-            this.blocks[x - 1 + (grassLevel - 5) * this.wid] = new leaveType(x - 1 + this.position.x, (grassLevel - 5) + this.position.y)
-            this.blocks[x + 1 + (grassLevel - 5) * this.wid] = new leaveType(x + 1 + this.position.x, (grassLevel - 5) + this.position.y)
-            this.blocks[x + (grassLevel - 6) * this.wid] = new leaveType(x + this.position.x, (grassLevel - 6) + this.position.y)
-        }
-    }
-
-    this.new_bush = function (bushPops, bushThrehold, grassLevel, x, bushType) {
-        if (bushPops > bushThrehold) {
-            if (this.blocks[x + (grassLevel - 1) * this.wid].name == "Void")
-                this.blocks[x + (grassLevel - 1) * this.wid] = new bushType(x + this.position.x, (grassLevel - 1) + this.position.y)
-        }
-    }
-
     this.generateChunk = function () {
         noiseSeed(this.seed)
 
@@ -74,9 +48,38 @@ const Chunk = function (wid, hei, topx, topy, seed) {
             const Blueberry_bushThrehold = 0.5
 
             this.new_bush(Blueberry_bushPops, Blueberry_bushThrehold, grassLevel, x, BlueberryBush)
+
+            const bindweed_Pops = perlinNoise(1, 0, x + this.position.x, 5, 90, 1)
+            const bindwee_Threhold = 0.5
+
+            this.new_bush(bindweed_Pops, bindwee_Threhold, grassLevel, x, Bindweed)
         }
+    }
 
+    this.new_verticalLayer = function (type, level, x) {
+        for (let y = level; y < this.hei; y++) {
+            this.blocks[x + y * this.wid] = new type(x + this.position.x, y + this.position.y)
+        }
+    }
 
+    this.new_tree = function (treePops, treeThreshold, grassLevel, x, logType, leaveType) {
+        if (treePops > treeThreshold && x > 0 && x < this.wid - 1) {
+            this.blocks[x + (grassLevel - 1) * this.wid] = new logType(x + this.position.x, (grassLevel - 1) + this.position.y)
+            this.blocks[x + (grassLevel - 2) * this.wid] = new logType(x + this.position.x, (grassLevel - 2) + this.position.y)
+            this.blocks[x + (grassLevel - 3) * this.wid] = new logType(x + this.position.x, (grassLevel - 3) + this.position.y)
+            this.blocks[x + (grassLevel - 4) * this.wid] = new logType(x + this.position.x, (grassLevel - 4) + this.position.y)
+            this.blocks[x + (grassLevel - 5) * this.wid] = new leaveType(x + this.position.x, (grassLevel - 5) + this.position.y)
+            this.blocks[x - 1 + (grassLevel - 5) * this.wid] = new leaveType(x - 1 + this.position.x, (grassLevel - 5) + this.position.y)
+            this.blocks[x + 1 + (grassLevel - 5) * this.wid] = new leaveType(x + 1 + this.position.x, (grassLevel - 5) + this.position.y)
+            this.blocks[x + (grassLevel - 6) * this.wid] = new leaveType(x + this.position.x, (grassLevel - 6) + this.position.y)
+        }
+    }
+
+    this.new_bush = function (bushPops, bushThrehold, grassLevel, x, bushType) {
+        if (bushPops > bushThrehold) {
+            if (this.blocks[x + (grassLevel - 1) * this.wid].name == "Void")
+                this.blocks[x + (grassLevel - 1) * this.wid] = new bushType(x + this.position.x, (grassLevel - 1) + this.position.y)
+        }
     }
 
     this.getMapOfChunk = function () {

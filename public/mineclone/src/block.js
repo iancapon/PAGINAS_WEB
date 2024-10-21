@@ -93,3 +93,11 @@ const Stone = function (x, y) {
 }
 Stone.prototype = Object.create(Block.prototype)
 Stone.prototype.constructor = Stone
+
+const Bindweed = function (x, y) {
+    Block.call(this, x, y)
+    this.name = "Bindweed"
+    this.es = (name) => this.name == name
+}
+Bindweed.prototype = Object.create(Block.prototype)
+Bindweed.prototype.constructor = Bindweed

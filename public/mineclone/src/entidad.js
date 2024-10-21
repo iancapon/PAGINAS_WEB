@@ -28,7 +28,8 @@ const Entidad = function (mundo, x, y) {
     }
 
     this.colisionDetection = function (other, len) {
-        const nonColliding = ["Void", "Bush", "BlueberryBush"]
+        const nonColliding = ["Void", "Bush", "BlueberryBush", "Undefined", "Bindweed"]
+        
         if (!nonColliding.find(type => other.es(type))) {
             let dx = this.pos.x - other.x
             let dy = this.pos.y - other.y
