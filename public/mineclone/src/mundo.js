@@ -1,7 +1,8 @@
-const Mundo = function (chunkWid, hei, chunkN) {
+const Mundo = function (chunkWid, hei, chunkN, seed) {
+    this.seed=seed
     this.chunks = []
     for (let i = 0; i < chunkN; i++) {
-        this.chunks.push(new Chunk(chunkWid, hei, 128 * i, 0))
+        this.chunks.push(new Chunk(chunkWid, hei, chunkWid * i, 0, seed))
     }
 
 

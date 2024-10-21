@@ -36,18 +36,14 @@ const Camera = function (player, mundo, x, y, cameraProperties, graphicAssets) {
 
     this.drawPlayer = function () {
         let player_on_position = this.worldCoordenateToCameraPosition(this.player.pos.x, this.player.pos.y)
-
         let img = this.assets.files.find((value) => value.es("Face"))
-        image(img.img,player_on_position.x, player_on_position.y-2,this.assets.res,this.assets.res)
-        //fill(0)
-        //rect(player_on_position.x, player_on_position.y, this.scale * 0.8, this.scale * 0.8)
+        image(img.img, player_on_position.x, player_on_position.y - 2, this.assets.res, this.assets.res)
+        return player_on_position
     }
 
     this.drawSelected = function () {
         let block_selected = this.player.checkAdjacentBlocks(this.player.aim, this.player.pos.x, this.player.pos.y)
-
         let block_selected_coord = this.worldCoordenateToCameraPosition(block_selected.x, block_selected.y)
-
         noFill()
         stroke(200, 0, 0)
         rect(block_selected_coord.x, block_selected_coord.y, this.scale)
@@ -70,9 +66,10 @@ const Camera = function (player, mundo, x, y, cameraProperties, graphicAssets) {
 
     this.record = function () {
         this.renderImagesForCubes()
-        this.drawPlayer()
         this.drawSelected()
         this.drawInventory()
+
+        return this.drawPlayer()
     }
 
     this.worldCoordenateToCameraPosition = function (x, y, wid, hei, scale) {

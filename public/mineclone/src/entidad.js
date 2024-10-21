@@ -21,14 +21,15 @@ const Entidad = function (mundo, x, y) {
     }
 
     this.colision = function () {
-        this.colisionDetection(this.checkAdjacentBlocks(0, this.pos.x, this.pos.y), 0.8) //// CENTRO (OBJETIVO DE BLOQUEAR ARRIBA)
-        this.colisionDetection(this.checkAdjacentBlocks(3, this.pos.x, this.pos.y), 0.8) //// ADELANTE
-        this.colisionDetection(this.checkAdjacentBlocks(5, this.pos.x, this.pos.y), 0.8) //// ABAJO
-        this.colisionDetection(this.checkAdjacentBlocks(7, this.pos.x, this.pos.y), 0.8) //// ATRAS
+        this.colisionDetection(this.checkAdjacentBlocks("centro", this.pos.x, this.pos.y), 0.8)
+        this.colisionDetection(this.checkAdjacentBlocks("adelante", this.pos.x, this.pos.y), 0.8)
+        this.colisionDetection(this.checkAdjacentBlocks("abajo", this.pos.x, this.pos.y), 0.8)
+        this.colisionDetection(this.checkAdjacentBlocks("atras", this.pos.x, this.pos.y), 0.8)
     }
 
     this.colisionDetection = function (other, len) {
-        if (!other.es("Void") && !other.es("Bush")) {
+        const nonColliding = ["Void", "Bush", "BlueberryBush"]
+        if (!nonColliding.find(type => other.es(type))) {
             let dx = this.pos.x - other.x
             let dy = this.pos.y - other.y
 
@@ -72,17 +73,4 @@ const Entidad = function (mundo, x, y) {
         return corners.find(esquina => esquina.es(position)).value
     }
 
-    /*this.checkAdjacentBlocks = function (number, x, y) {
-        let corners = []
-        corners.push(this.mundo.getBlockAt(int(x + 0.5) + 0, int(y) + 0)) //// CENTRO
-        corners.push(this.mundo.getBlockAt(int(x + 0.5) + 0, int(y) - 1)) //// ARRIBA
-        corners.push(this.mundo.getBlockAt(int(x + 0.5) + 1, int(y) - 1)) //// ARRIBA Y ADELANTE
-        corners.push(this.mundo.getBlockAt(int(x + 0.5) + 1, int(y) + 0)) //// ADELANTE
-        corners.push(this.mundo.getBlockAt(int(x + 0.5) + 1, int(y) + 1)) //// ABAJO Y ADELANTE
-        corners.push(this.mundo.getBlockAt(int(x + 0.5) + 0, int(y) + 1)) //// ABAJO
-        corners.push(this.mundo.getBlockAt(int(x + 0.5) - 1, int(y) + 1)) //// ABAJO Y ATRAS
-        corners.push(this.mundo.getBlockAt(int(x + 0.5) - 1, int(y) + 0)) //// ATRAS
-        corners.push(this.mundo.getBlockAt(int(x + 0.5) - 1, int(y) - 1)) //// ARRIBA Y ATRAS
-        return corners[number % corners.length]
-    }*/
 }

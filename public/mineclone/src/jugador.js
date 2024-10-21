@@ -1,14 +1,10 @@
-
-
 const Player = function (mundo, x, cameraProperties, gameAssets) {
-    Entidad.call(this,mundo,x,0)
-
-    this.inventory = ["Stone", "Wood", "Grass", "Leaves", "Earth", "Bush"]
+    Entidad.call(this, mundo, x, 0)
+    const bl = new blockList()
+    this.inventory = bl.listaDeBloques().map(bloque => bloque.name); this.inventory.shift(); this.inventory.pop();
     this.inv_index = 0
     this.aim = 3
-
     this.cam = new Camera(this, this.mundo, 0, 0, cameraProperties, gameAssets)
-
     this.tick = 0
     this.remove_TickCounter = this.tick
     this.add_TickCounter = this.tick
@@ -20,7 +16,6 @@ const Player = function (mundo, x, cameraProperties, gameAssets) {
                 break
             }
         }
-
         this.cam.setPosition(this.pos.x, this.pos.y)
     }
 
@@ -29,6 +24,7 @@ const Player = function (mundo, x, cameraProperties, gameAssets) {
 
         let player_on_camera = this.cam.worldCoordenateToCameraPosition(this.pos.x, this.pos.y)
         this.moveCameraCloseToEdge(player_on_camera.x, player_on_camera.y, cameraProperties)
+        return player_on_camera
     }
 
     this.desplazarJugadorEnX = function (amount) {
@@ -50,32 +46,23 @@ const Player = function (mundo, x, cameraProperties, gameAssets) {
         this.inv_index = index % this.inventory.length
     }
 
-    this.changeBlock = function (type) {
-        let block = this.checkAdjacentBlocks(this.aim, this.pos.x, this.pos.y)
-        block = blockFactory(type, block.x, block.y)
-        this.mundo.setBlockAt(block)
-    }
-
-    this.removeBlock = function () {
-        const TIME_THRESHHOLD = 0
-        if (this.tick - this.remove_TickCounter > TIME_THRESHHOLD) {
-            this.changeBlock("Void")
-            this.remove_TickCounter = this.tick
-
-        }
-    }
-
     this.checkValidBlockPlacement = function () {
         let block = this.checkAdjacentBlocks(this.aim, this.pos.x, this.pos.y)
         if (block.name == "Void") {
             for (let i = 0; i < 4; i++) {
-                if (this.checkAdjacentBlocks(1 + i * 2, block.x, block.y ).name != "Void") {
+                if (this.checkAdjacentBlocks(1 + i * 2, block.x, block.y).name != "Void") {
                     return true
                 }
             }
             return false
         }
         return false
+    }
+
+    this.changeBlock = function (type) {
+        let block = this.checkAdjacentBlocks(this.aim, this.pos.x, this.pos.y)
+        block = bl.blockFactory(type, block.x, block.y)
+        this.mundo.setBlockAt(block)
     }
 
     this.addBlock = function () {
@@ -85,6 +72,15 @@ const Player = function (mundo, x, cameraProperties, gameAssets) {
                 this.changeBlock(this.inventory[this.inv_index])
                 this.add_TickCounter = this.tick
             }
+        }
+    }
+
+    this.removeBlock = function () {
+        const TIME_THRESHHOLD = 0
+        if (this.tick - this.remove_TickCounter > TIME_THRESHHOLD) {
+            this.changeBlock("Void")
+            this.remove_TickCounter = this.tick
+
         }
     }
 
@@ -139,7 +135,18 @@ const Player = function (mundo, x, cameraProperties, gameAssets) {
                 this.aim = 1
             }
     }
-}
 
+    this.scrollInventory = function (amount) {
+        this.inv_index += amount
+        this.inv_index %= this.inventory.length
+        if (this.inv_index < 0) {
+            this.inv_index = this.inventory.length - 1
+        }
+        if (this.inv_index > this.inventory.length - 1) {
+            this.inv_index = 0
+        }
+
+    }
+}
 Player.prototype = Object.create(Entidad.prototype)
 Player.prototype.constructor = Player

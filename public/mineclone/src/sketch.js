@@ -15,20 +15,9 @@ function setup() {
     for (let element of document.getElementsByClassName("p5Canvas")) {
         element.addEventListener("contextmenu", (e) => e.preventDefault());
     }
-    const assets={files:[
-        {img:loadImage("assets/Void.png"),es:(nombre) => nombre==="Void"},
-        {img:loadImage("assets/Wood.png"),es:(nombre) => nombre==="Wood"},
-        {img:loadImage("assets/Stone.png"),es:(nombre) => nombre==="Stone"},
-        {img:loadImage("assets/Leaves.png"),es:(nombre) => nombre==="Leaves"},
-        {img:loadImage("assets/Bush.png"),es:(nombre) => nombre==="Bush"},
-        {img:loadImage("assets/Grass.png"),es:(nombre) => nombre==="Grass"},
-        {img:loadImage("assets/Earth.png"),es:(nombre) => nombre==="Earth"},
-        {img:loadImage("assets/Face.png"),es:(nombre) => nombre==="Face"},
-        {img:loadImage("assets/Undefined.png"),es:()=>true}
-    ],res:16}
-    
-    miMundo = new Mundo(256, 128, 1)
-    jugador = new Player(miMundo, 128, cameraProperties, assets)
+
+    miMundo = new Mundo(128, 128, 2, Math.random() * 10000)
+    jugador = new Player(miMundo, 128, cameraProperties, assets())
     miMundo.generateWorld()
     jugador.setSpawn()
 }
@@ -36,7 +25,7 @@ function setup() {
 function draw() {
     background(110)
     scale(2)
-    jugador.rec()
+    aimWithMouse(jugador.rec())
 
     delta_time = millis() - delta_time
     for (let i = 0; i < delta_time; i++) {
@@ -49,12 +38,32 @@ function draw() {
     handleMousePress()
 }
 
+
+
+function assets() {
+    const bl = new blockList()
+    let assetList = {
+        files: bl.listaDeBloques().map(bloque => {
+            return {
+                img: loadImage("assets/" + bloque.name + ".png"),
+                es: (nombre) => nombre === bloque.name
+            }
+        }), res: 16
+    }
+    assetList.files.unshift({ img: loadImage("assets/Face.png"), es: (nombre) => nombre === "Face" })
+    return assetList
+}
+
 function mouseWheel(event) {
     if (event.delta != 0) {
-        if (event.delta > 0)
-            jugador.aimWithScroll(1)
-        else
-            jugador.aimWithScroll(-1)
+        if (event.delta > 0) {
+            //jugador.aimWithScroll(1)
+            jugador.scrollInventory(1)
+        }
+        else{
+            //jugador.aimWithScroll(-1)
+            jugador.scrollInventory(-1)
+        }
     }
 }
 
@@ -89,4 +98,62 @@ function handleMousePress() {
         if (mouseButton === LEFT) jugador.removeBlock()
         if (mouseButton === RIGHT) jugador.addBlock()
     }
+}
+
+function aimWithMouse(position) { // NO ESTOY ORGULLOSO DE ESTA JSJSJSJ 
+    // ROMPO TODO EL ENCAPSULAMIENTO EN TODAS PARTES AHORA XD
+    let dx = position.x - mouseX / 2 + 8
+    let dy = position.y - mouseY / 2 + 8
+    let ejex = undefined
+    let ejey = undefined
+    if (dx < 8) {
+        ejex = "derecha"
+    }
+    if (dx > -8) {
+        ejex = "izquierda"
+    }
+    if (dx <= 8 && dx >= -8) {
+        ejex = "centro"
+    }
+    if (dy > 8) {
+        ejey = "arriba"
+    }
+    if (dy < -8) {
+        ejey = "abajo"
+    }
+    if (dy <= 8 && dy >= -8) {
+        ejey = "centro"
+    }
+    let direccion = ejex + " y " + ejey
+    switch (direccion) {
+        case "derecha y centro":
+            jugador.aim = 3
+            break
+        case "izquierda y centro":
+            jugador.aim = 7
+            break
+        case "centro y arriba":
+            jugador.aim = 1
+            break
+        case "centro y abajo":
+            jugador.aim = 5
+            break
+        case "derecha y arriba":
+            jugador.aim = 2
+            break
+        case "izquierda y arriba":
+            jugador.aim = 8
+            break
+        case "derecha y abajo":
+            jugador.aim = 4
+            break
+        case "izquierda y abajo":
+            jugador.aim = 6
+            break
+            defaul:
+            jugador.aim = 0
+            break
+    }
+
+    //console.log("ejex: "+ ejex + "; ejey: "+ejey)
 }

@@ -1,14 +1,25 @@
-const blockFactory = function (type, x, y) {
+const blockList = function () {
     const bloquesDisponibles = [
-        new Void(x, y),
-        new Wood(x, y),
-        new Leaves(x, y),
-        new Stone(x, y),
-        new Grass(x, y),
-        new Earth(x, y),
-        new Bush(x, y),
-        new Block(x, y)// CONTINGENCIA
+        new Void(),
+        new Log(),
+        new WhiteLog(),
+        new WoodBlock(),
+        new Leaves(),
+        new DarkLeaves(),
+        new Stone(),
+        new Grass(),
+        new Earth(),
+        new Bush(),
+        new BlueberryBush(),
+        new Block()
     ]
-    const bloque = bloquesDisponibles.find(tipo => tipo.es(type))
-    return bloque
+    this.listaDeBloques = function(){
+        return bloquesDisponibles
+    }
+    this.blockFactory = function (type, x, y) {
+        const bloque = Object.create(bloquesDisponibles.find(tipo => tipo.es(type)))
+        bloque.x = x
+        bloque.y = y
+        return bloque
+    }
 }
